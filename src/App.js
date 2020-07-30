@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import NewBlogForm from './components/NewBlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,10 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -23,6 +28,7 @@ const App = () => {
     if (loggedInUser) {
       const user = JSON.parse(loggedInUser)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -49,6 +55,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('user', JSON.stringify(user))
       setUser(user)
+      blogService.setToken(user.token)
       displayNotification('Login successful')
       setUsername('')
       setPassword('')
@@ -63,6 +70,31 @@ const App = () => {
     setUser(null)
     displayNotification('Logout successful')
   }
+
+  const addBlog = async (event) => {
+    console.log('addBlog')
+    event.preventDefault()
+    const newBlogObject = { title: newTitle, author: newAuthor, url: newUrl }
+    try {
+      const newBlog = await blogService.create(newBlogObject)
+      setBlogs(blogs.concat(newBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+      displayNotification('Blog added')
+    } catch (error) {
+      console.log(error.response)
+      if (error.response.data.error) {
+        displayError(error.response.data.error)
+      } else {
+        displayError('An error occured')
+      }
+    }
+  }
+
+  const handleNewTitleChange = async (event) => setNewTitle(event.target.value)
+  const handleNewAuthorChange = async (event) => setNewAuthor(event.target.value)
+  const handleNewUrlChange = async (event) => setNewUrl(event.target.value)
 
   if (user === null) {
     return (
@@ -95,6 +127,18 @@ const App = () => {
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
+        </div>
+        <div>
+          <h2>Create new blog</h2>
+          <NewBlogForm
+            addBlogHandler={addBlog}
+            newTitleValue={newTitle}
+            newTitleChangeHandler={handleNewTitleChange}
+            newAuthorValue={newAuthor}
+            newAuthorChangeHandler={handleNewAuthorChange}
+            newUrlValue={newUrl}
+            newUrlChangeHandler={handleNewUrlChange}
+          />
         </div>
       </>
     )

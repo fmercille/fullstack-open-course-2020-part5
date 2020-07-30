@@ -1,0 +1,15 @@
+.notice {
+  color: green;
+  background-color: #cccccc;
+  border: 2px solid green;
+  padding: 5px;
+  font-size: 24px;
+}
+
+.error {
+  color: red;
+  background-color: #cccccc;
+  border: 2px solid red;
+  padding: 5px;
+  font-size: 24px;  
+}

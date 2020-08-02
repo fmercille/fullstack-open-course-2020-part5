@@ -139,13 +139,13 @@ const App = () => {
         <div style={showWhenVisible}>
           <h2>Create new blog</h2>
           <NewBlogForm
-            addBlogHandler={addBlog}
-            newTitleValue={newTitle}
-            newTitleChangeHandler={handleNewTitleChange}
-            newAuthorValue={newAuthor}
-            newAuthorChangeHandler={handleNewAuthorChange}
-            newUrlValue={newUrl}
-            newUrlChangeHandler={handleNewUrlChange}
+            handleSubmit={addBlog}
+            title={newTitle}
+            handleTitleChange={handleNewTitleChange}
+            author={newAuthor}
+            handleAuthorChange={handleNewAuthorChange}
+            url={newUrl}
+            handleUrlChange={handleNewUrlChange}
           />
           <button onClick={() => setNewBlogFormVisible(false)}>Cancel</button>
         </div>

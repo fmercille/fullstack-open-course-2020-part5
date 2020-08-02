@@ -13,6 +13,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const [newBlogFormVisible, setNewBlogFormVisible] = useState(false)
+
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -96,6 +98,9 @@ const App = () => {
   const handleNewAuthorChange = async (event) => setNewAuthor(event.target.value)
   const handleNewUrlChange = async (event) => setNewUrl(event.target.value)
 
+  const hideWhenVisible = { display: newBlogFormVisible ? 'none' : '' }
+  const showWhenVisible = { display: newBlogFormVisible ? '' : 'none' }
+
   if (user === null) {
     return (
       <>
@@ -124,11 +129,14 @@ const App = () => {
           <div>
             {user.name} is logged in <button onClick={handleLogout}>Logout</button>
           </div>
+          <div style={hideWhenVisible}>
+            <button onClick={() => setNewBlogFormVisible(true)}>New blog</button>
+          </div>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
         </div>
-        <div>
+        <div style={showWhenVisible}>
           <h2>Create new blog</h2>
           <NewBlogForm
             addBlogHandler={addBlog}
@@ -139,6 +147,7 @@ const App = () => {
             newUrlValue={newUrl}
             newUrlChangeHandler={handleNewUrlChange}
           />
+          <button onClick={() => setNewBlogFormVisible(false)}>Cancel</button>
         </div>
       </>
     )

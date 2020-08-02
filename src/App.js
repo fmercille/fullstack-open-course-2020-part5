@@ -15,10 +15,6 @@ const App = () => {
 
   const [newBlogFormVisible, setNewBlogFormVisible] = useState(false)
 
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -73,16 +69,11 @@ const App = () => {
     displayNotification('Logout successful')
   }
 
-  const addBlog = async (event) => {
-    console.log('addBlog')
-    event.preventDefault()
-    const newBlogObject = { title: newTitle, author: newAuthor, url: newUrl }
+  const createBlog = async (blogObject) => {
+    console.log('createBlog')
     try {
-      const newBlog = await blogService.create(newBlogObject)
-      setBlogs(blogs.concat(newBlog))
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog))
       displayNotification('Blog added')
     } catch (error) {
       console.log(error.response)
@@ -93,10 +84,6 @@ const App = () => {
       }
     }
   }
-
-  const handleNewTitleChange = async (event) => setNewTitle(event.target.value)
-  const handleNewAuthorChange = async (event) => setNewAuthor(event.target.value)
-  const handleNewUrlChange = async (event) => setNewUrl(event.target.value)
 
   const hideWhenVisible = { display: newBlogFormVisible ? 'none' : '' }
   const showWhenVisible = { display: newBlogFormVisible ? '' : 'none' }
@@ -139,13 +126,7 @@ const App = () => {
         <div style={showWhenVisible}>
           <h2>Create new blog</h2>
           <NewBlogForm
-            handleSubmit={addBlog}
-            title={newTitle}
-            handleTitleChange={handleNewTitleChange}
-            author={newAuthor}
-            handleAuthorChange={handleNewAuthorChange}
-            url={newUrl}
-            handleUrlChange={handleNewUrlChange}
+            createBlog={createBlog}
           />
           <button onClick={() => setNewBlogFormVisible(false)}>Cancel</button>
         </div>

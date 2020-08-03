@@ -64,6 +64,26 @@ const App = () => {
     displayNotification('Logout successful')
   }
 
+  const likeBlog = async (likedBlog) => {
+    const payload = {
+      ...likedBlog,
+      likes: likedBlog.likes + 1,
+    }
+
+    try {
+      await blogService.update(likedBlog.id, payload)
+      const updatedBlogs = blogs.map(blog => blog.id === likedBlog.id ? { ...blog, likes: payload.likes } : blog)
+      setBlogs(updatedBlogs)
+    } catch (error) {
+      console.log(error.response)
+      if (error.response.data.error) {
+        displayError(error.response.data.error)
+      } else {
+        displayError('An error occured')
+      }
+    }
+  }
+
   const createBlog = async (blogObject) => {
     console.log('createBlog')
     try {
@@ -105,7 +125,7 @@ const App = () => {
             <button onClick={() => setNewBlogFormVisible(true)}>New blog</button>
           </div>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLike={likeBlog} />
           )}
         </div>
         <div style={showWhenVisible}>

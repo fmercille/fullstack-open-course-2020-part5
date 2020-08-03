@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike }) => {
   const [expanded, setExpanded] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -8,6 +8,11 @@ const Blog = ({ blog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const like = (event) => {
+    event.preventDefault()
+    handleLike(blog)
   }
 
   let expandedInfo = ''
@@ -18,7 +23,7 @@ const Blog = ({ blog }) => {
           {blog.url}
         </div>
         <div>
-          Likes {blog.likes} <button onClick={() => console.log('Like')}>like</button>
+          Likes {blog.likes} <button onClick={like}>like</button>
         </div>
         <div>
           {blog.user.name}

@@ -112,6 +112,7 @@ const App = () => {
       </>
     )
   } else {
+    blogs.sort((a, b) => a.likes > b.likes ? -1 : (a.likes < b.likes ? 1 : 0))
     return (
       <>
         <Notification message={notificationMessage} messageType='notice' />

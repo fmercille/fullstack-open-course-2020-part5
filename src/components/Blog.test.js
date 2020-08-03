@@ -39,5 +39,15 @@ describe('<Blog />', () => {
     expect(div).not.toHaveTextContent('https://www.example.net')
     expect(div).not.toHaveTextContent('Likes ')
   })
+
+  test('Renders expanded when click "show" button', () => {
+    const div = component.container.querySelector('.blog')
+    const button = component.getByText('Show')
+    fireEvent.click(button)
+    expect(div).toHaveTextContent('My Blog Title')
+    expect(div).toHaveTextContent('Foobar McJohnson')
+    expect(div).toHaveTextContent('https://www.example.net')
+    expect(div).toHaveTextContent('Likes ')
+  })
 })
 

@@ -58,7 +58,7 @@ const App = () => {
     console.log('Logging in with', username, password)
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.clear()
     setUser(null)
     displayNotification('Logout successful')

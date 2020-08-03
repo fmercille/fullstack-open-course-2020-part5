@@ -48,7 +48,7 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {blog.title} {blog.author} <button onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide' : 'Show'}</button>
       {expandedInfo}
     </div>

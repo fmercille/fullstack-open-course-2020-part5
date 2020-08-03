@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, handleDelete, user }) => {
   const [expanded, setExpanded] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -10,9 +10,20 @@ const Blog = ({ blog, handleLike }) => {
     marginBottom: 5
   }
 
+  const deleteButtonStyle = {
+    display: (blog.user.username === user.username ? '' : 'none')
+  }
+
   const like = (event) => {
     event.preventDefault()
     handleLike(blog)
+  }
+
+  const deleteBlog = (event) => {
+    event.preventDefault()
+    if (window.confirm(`Delete "${blog.title}" by ${blog.author}?`)) {
+      handleDelete(blog)
+    }
   }
 
   let expandedInfo = ''
@@ -27,6 +38,9 @@ const Blog = ({ blog, handleLike }) => {
         </div>
         <div>
           {blog.user.name}
+        </div>
+        <div style={deleteButtonStyle}>
+          <button onClick={deleteBlog}>remove</button>
         </div>
       </>
     )

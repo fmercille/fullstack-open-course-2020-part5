@@ -100,6 +100,21 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (blogObject) => {
+    try {
+      await blogService.delete(blogObject.id)
+      const updatedBlogs = blogs.filter(blog => blog.id !== blogObject.id)
+      setBlogs(updatedBlogs)
+    } catch (error) {
+      console.log(error.response)
+      if (error.response.data.error) {
+        displayError(error.response.data.error)
+      } else {
+        displayError('An error occured')
+      }
+    }
+  }
+
   const hideWhenVisible = { display: newBlogFormVisible ? 'none' : '' }
   const showWhenVisible = { display: newBlogFormVisible ? '' : 'none' }
 
@@ -126,7 +141,7 @@ const App = () => {
             <button onClick={() => setNewBlogFormVisible(true)}>New blog</button>
           </div>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} handleLike={likeBlog} />
+            <Blog key={blog.id} blog={blog} handleLike={likeBlog} handleDelete={deleteBlog} user={user} />
           )}
         </div>
         <div style={showWhenVisible}>

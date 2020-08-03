@@ -5,6 +5,8 @@ import Blog from './Blog'
 
 describe('<Blog />', () => {
   let component
+  let handleLike
+  let handleDelete
 
   beforeEach(() => {
     const blog = {
@@ -24,8 +26,8 @@ describe('<Blog />', () => {
       username: 'foobar'
     }
 
-    const handleLike = jest.fn()
-    const handleDelete = jest.fn()
+    handleLike = jest.fn()
+    handleDelete = jest.fn()
 
     component = render(
       <Blog blog={blog} user={user} handleLike={handleLike} handleDelete={handleDelete} />
@@ -42,12 +44,23 @@ describe('<Blog />', () => {
 
   test('Renders expanded when click "show" button', () => {
     const div = component.container.querySelector('.blog')
-    const button = component.getByText('Show')
+    const button = div.querySelector('.showButton')
     fireEvent.click(button)
     expect(div).toHaveTextContent('My Blog Title')
     expect(div).toHaveTextContent('Foobar McJohnson')
     expect(div).toHaveTextContent('https://www.example.net')
     expect(div).toHaveTextContent('Likes ')
+  })
+
+  test('Click on "Like" button calls handler once per click', () => {
+    const div = component.container.querySelector('.blog')
+    const button = component.getByText('Show')
+    fireEvent.click(button)
+    const likeButton = div.querySelector('.likeButton')
+    fireEvent.click(likeButton)
+    expect(handleLike.mock.calls).toHaveLength(1)
+    fireEvent.click(likeButton)
+    expect(handleLike.mock.calls).toHaveLength(2)
   })
 })
 

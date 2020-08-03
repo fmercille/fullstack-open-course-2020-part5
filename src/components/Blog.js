@@ -35,12 +35,12 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
           {blog.url}
         </div>
         <div>
-          Likes {blog.likes} <button onClick={like}>like</button>
+          Likes {blog.likes} <button onClick={like} className="likeButton">like</button>
         </div>
         <div>
           {blog.user.name}
         </div>
-        <div style={deleteButtonStyle}>
+        <div style={deleteButtonStyle} className="deleteButton">
           <button onClick={deleteBlog}>remove</button>
         </div>
       </>
@@ -49,7 +49,7 @@ const Blog = ({ blog, handleLike, handleDelete, user }) => {
 
   return (
     <div style={blogStyle} className="blog">
-      {blog.title} {blog.author} <button onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide' : 'Show'}</button>
+      {blog.title} {blog.author} <button className="showButton" onClick={() => setExpanded(!expanded)}>{expanded ? 'Hide' : 'Show'}</button>
       {expandedInfo}
     </div>
   )

@@ -39,4 +39,26 @@ describe('Blog app', function () {
       cy.get('html').should('not.contain', 'Foo Bar')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.request('POST', 'http://localhost:3001/api/login', {
+        username: 'foobar', password: 'password123'
+      }).then(response => {
+        localStorage.setItem('user', JSON.stringify(response.body))
+      })
+
+      cy.visit('http://localhost:3000')
+    })
+
+    it('a new blog can be created', function() {
+      cy.get('#newBlogButton').click()
+      cy.get('#titleInput').type('My Awesome Blog')
+      cy.get('#authorInput').type('Foobar McJohnson')
+      cy.get('#urlInput').type('https://www.example.net')
+      cy.get('#newBlogSubmitButton').click()
+
+      cy.get('.blogList').contains('My Awesome Blog')
+    })
+  })
 })

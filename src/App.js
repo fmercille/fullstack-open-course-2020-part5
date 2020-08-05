@@ -138,11 +138,13 @@ const App = () => {
             {user.name} is logged in <button onClick={handleLogout}>Logout</button>
           </div>
           <div style={hideWhenVisible}>
-            <button onClick={() => setNewBlogFormVisible(true)}>New blog</button>
+            <button id="newBlogButton" onClick={() => setNewBlogFormVisible(true)}>New blog</button>
           </div>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} handleLike={likeBlog} handleDelete={deleteBlog} user={user} />
-          )}
+          <div className="blogList">
+            {blogs.map(blog =>
+              <Blog key={blog.id} blog={blog} handleLike={likeBlog} handleDelete={deleteBlog} user={user} />
+            )}
+          </div>
         </div>
         <div style={showWhenVisible}>
           <h2>Create new blog</h2>

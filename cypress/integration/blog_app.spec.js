@@ -42,13 +42,7 @@ describe('Blog app', function () {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.request('POST', 'http://localhost:3001/api/login', {
-        username: 'foobar', password: 'password123'
-      }).then(response => {
-        localStorage.setItem('user', JSON.stringify(response.body))
-      })
-
-      cy.visit('http://localhost:3000')
+      cy.login({ username: 'foobar', password: 'password123' })
     })
 
     it('a new blog can be created', function() {
@@ -59,6 +53,28 @@ describe('Blog app', function () {
       cy.get('#newBlogSubmitButton').click()
 
       cy.get('.blogList').contains('My Awesome Blog')
+    })
+
+    describe('And there are blogs', function() {
+      beforeEach(function() {
+        const blogs = [
+          { title: 'React patterns', author: 'Michael Chan', likes: 7, url: 'https://reactpatterns.com/' },
+          { title: 'Go To Statement Considered Harmful', author: 'Edsger W. Dijkstra', likes: 5, url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html' },
+          { title: 'Canonical string reduction', author: 'Edsger W. Dijkstra', likes: 12, url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html' }
+        ]
+
+        blogs.map(blog => {
+          cy.createBlog(blog)
+        })
+        cy.visit('http://localhost:3000')
+      })
+
+      it('user can like a blog', function() {
+        cy.get('div.blogList > div:nth-child(2) .showButton').click()
+        cy.get('div.blogList > div:nth-child(2)').should('contain', 'Likes 7')
+        cy.get('div.blogList > div:nth-child(2) .likeButton').click()
+        cy.get('div.blogList > div:nth-child(2)').should('contain', 'Likes 8')
+      })
     })
   })
 })

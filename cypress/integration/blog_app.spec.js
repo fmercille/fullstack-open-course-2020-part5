@@ -95,6 +95,22 @@ describe('Blog app', function () {
         cy.get('div.blogList > div:nth-child(2) .showButton').click()
         cy.get('div.blogList > div:nth-child(2) .deleteButton').should('have.css', 'display', 'none')
       })
+
+      it('blogs are ordered by number of likes', function() {
+        cy.get('.showButton').click({ multiple: true })
+        cy.get('.blogLikes').then(($likes) => {
+          let lastLikes = Infinity
+          const likesRe = /Likes\D+(\d+)\D/
+
+          for (let i = 0; i < $likes.length; i++) {
+            const matches = $likes[i].innerText.match(likesRe)
+            const blogLikes = parseInt(matches[1])
+
+            cy.expect(blogLikes <= lastLikes).to.be.true
+            lastLikes = blogLikes
+          }
+        })
+      })
     })
   })
 })

@@ -8,7 +8,14 @@ describe('Blog app', function () {
       password: 'password123'
     }
 
+    const user2 = {
+      name: 'Spam Ham',
+      username: 'spamham',
+      password: 'password123'
+    }
+
     cy.request('POST', 'http://localhost:3001/api/users', user)
+    cy.request('POST', 'http://localhost:3001/api/users', user2)
     cy.visit('http://localhost:3000')
   })
 
@@ -74,6 +81,19 @@ describe('Blog app', function () {
         cy.get('div.blogList > div:nth-child(2)').should('contain', 'Likes 7')
         cy.get('div.blogList > div:nth-child(2) .likeButton').click()
         cy.get('div.blogList > div:nth-child(2)').should('contain', 'Likes 8')
+      })
+
+      it('user can delete their own blog', function() {
+        cy.get('.blog').should('have.length', 3)
+        cy.get('div.blogList > div:nth-child(2) .showButton').click()
+        cy.get('div.blogList > div:nth-child(2) .deleteButton > button').click()
+        cy.get('.blog').should('have.length', 2)
+      })
+
+      it('user cannot delete someone else\'s blog', function() {
+        cy.login({ username: 'spamham', password: 'password123' })
+        cy.get('div.blogList > div:nth-child(2) .showButton').click()
+        cy.get('div.blogList > div:nth-child(2) .deleteButton').should('have.css', 'display', 'none')
       })
     })
   })
